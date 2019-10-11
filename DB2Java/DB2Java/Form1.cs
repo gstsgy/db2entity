@@ -80,14 +80,14 @@ namespace DB2Java
             JavaClass j = new JavaClass();
             foreach(List<string> tmp in l)
             {               
-                d.name = tmp[0];
-                d.dataType = tmp[1];
-                d.dataLength = (tmp[2]==null|| tmp[2] == "")?0:int.Parse(tmp[2]);
-                d.dataScale= (tmp[3] == null || tmp[3] == "") ? 0 : int.Parse(tmp[3]);
+                d.Name = tmp[0];
+                d.DataType = tmp[1];
+                d.DataLength = (tmp[2]==null|| tmp[2] == "")?0:int.Parse(tmp[2]);
+                d.DataScale= (tmp[3] == null || tmp[3] == "") ? 0 : int.Parse(tmp[3]);
                 JavaField jf = new JavaField();
                 jf.javaType = d.TypeConversion();
                 jf.power = "private";
-                jf.name = d.name.ToLower();
+                jf.name = d.Name.ToLower();
                 jf.met = true;
                 j.ljf.Add(jf);              
             }
@@ -102,15 +102,15 @@ namespace DB2Java
             CSharpClass j = new CSharpClass();
             foreach (List<string> tmp in l)
             {
-                d.name = tmp[0];
-                d.dataType = tmp[1];
-                d.dataLength = (tmp[2] == null || tmp[2] == "") ? 0 : int.Parse(tmp[2]);
-                d.dataScale = (tmp[3] == null || tmp[3] == "") ? 0 : int.Parse(tmp[3]);
-                d.annotation = tmp[4];
+                d.Name = tmp[0];
+                d.DataType = tmp[1];
+                d.DataLength = (tmp[2] == null || tmp[2] == "") ? 0 : int.Parse(tmp[2]);
+                d.DataScale = (tmp[3] == null || tmp[3] == "") ? 0 : int.Parse(tmp[3]);
+                d.Annotation = tmp[4];
                 JavaField jf = new JavaField();
                 jf.javaType = d.TypeConversion();
                 jf.power = "private";
-                jf.name = InitUpper(d.name.ToLower());
+                jf.name = InitUpper(d.Name.ToLower());
                 jf.met = true;
                 j.ljf.Add(jf);
             }

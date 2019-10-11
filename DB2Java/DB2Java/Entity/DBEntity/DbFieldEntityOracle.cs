@@ -5,8 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Strawberry.Util
+namespace DB2Entity.Entity.DBEntity
 {
+    /// <summary>
+    /// Oracle 与 Java 数据类型转换
+    /// </summary>
     class DbFieldEntityOracle : DbFieldEntity
     {
         public override string TypeConversion()
@@ -15,19 +18,19 @@ namespace Strawberry.Util
             {
                 throw new Exception();
             }
-            else if (this.dataType == "VARCHAR2" || this.dataType == "CHAR")
+            else if (this.DataType == "VARCHAR2" || this.DataType == "CHAR")
             {
-                return "string";
+                return "String";
             }
-            else if (this.dataType == "NUMBER")
+            else if (this.DataType == "NUMBER")
             {
-                if (this.dataScale == 0)
+                if (this.DataScale == 0)
                 {
-                    if (this.dataLength < 10)
+                    if (this.DataLength < 10)
                     {
                         return "int";
                     }
-                    else if (this.dataLength < 19)
+                    else if (this.DataLength < 19)
                     {
                         return "long";
                     }
@@ -36,18 +39,18 @@ namespace Strawberry.Util
                         return "BigDecimal";
                     }
                 }
-                else if (this.dataScale < 18)
+                else if (this.DataScale < 18)
                 {
                     return "double";
                 }
                 else
                 {
-                    return "bigDecimal";
+                    return "BigDecimal";
                 }
             }
-            else if (this.dataType == "DATE")
+            else if (this.DataType == "DATE")
             {
-                return "DateTime"; 
+                return "Time"; 
             }
             else
             {

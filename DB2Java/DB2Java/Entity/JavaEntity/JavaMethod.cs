@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DB2Java.Util
+namespace DB2Entity.Entity.JavaEntity
 {
 	/// <summary>
 	/// Description of JavaMethod.
