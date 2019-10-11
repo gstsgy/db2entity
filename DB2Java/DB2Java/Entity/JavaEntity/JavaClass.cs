@@ -29,7 +29,7 @@ namespace DB2Entity.Entity.JavaEntity
         /// <summary>
         /// 
         /// </summary>
-		public string ClassKeyword;
+		public string ClassKeyword { get; set; } = "class";
 
         /// <summary>
         /// 
