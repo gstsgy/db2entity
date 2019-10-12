@@ -20,6 +20,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DB2Entity.Entity.DBEntity
 {
@@ -90,7 +91,8 @@ namespace DB2Entity.Entity.DBEntity
                         try
                         {
                             string str = dataReader.GetValue(i) == null ? "" : dataReader.GetValue(i).ToString();
-                            l.Add(dataReader.GetFieldValue<string>(i),dataReader.GetValue(i));
+                            l.Add(dataReader.GetName(i).Trim(),dataReader.GetValue(i));
+                            //MessageBox.Show(dataReader.GetName(i).Trim());
                         }
                         catch (Exception)
                         {

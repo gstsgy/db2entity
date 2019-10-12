@@ -257,7 +257,7 @@ namespace DB2Entity
             string path = Directory.GetCurrentDirectory() + "/db.conf";
             FileUtil.WriteFile(path, JsonConvert.SerializeObject(dbParams), null, FileMode.Create);
               getTablesSql = "select table_name NAME from information_schema.tables where table_schema = '" + dbParams["MySql"].Database + "'"; ;
-               connection = new MysqlConnection (dbParams["Oracle"]);
+               connection = new MysqlConnection (dbParams["MySql"]);
            
           
             try
