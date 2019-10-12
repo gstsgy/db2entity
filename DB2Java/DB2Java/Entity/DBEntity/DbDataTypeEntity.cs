@@ -19,7 +19,7 @@ namespace DB2Entity.Entity.DBEntity
     /// <summary>
     /// 数据库字段实体
     /// </summary>
-    abstract class DbFieldEntity
+    abstract class DbDataTypeEntity
     {
         /// <summary>
         /// 字段名称

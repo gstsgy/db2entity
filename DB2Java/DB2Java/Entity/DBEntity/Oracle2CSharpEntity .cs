@@ -28,7 +28,7 @@ namespace DB2Entity.Entity.DBEntity
     /// <summary>
     /// Oracle 与 Java 数据类型转换
     /// </summary>
-    class DbFieldEntityOracle : DbFieldEntity
+    class Oracle2CSharpEntity : DbDataTypeEntity
     {
         public override string TypeConversion()
         {
@@ -38,7 +38,7 @@ namespace DB2Entity.Entity.DBEntity
             }
             else if (this.DataType == "VARCHAR2" || this.DataType == "CHAR")
             {
-                return "String";
+                return "string";
             }
             else if (this.DataType == "NUMBER")
             {
@@ -54,7 +54,7 @@ namespace DB2Entity.Entity.DBEntity
                     }
                     else
                     {
-                        return "BigDecimal";
+                        return "decimal";
                     }
                 }
                 else if (this.DataScale < 18)
@@ -63,16 +63,16 @@ namespace DB2Entity.Entity.DBEntity
                 }
                 else
                 {
-                    return "BigDecimal";
+                    return "decimal";
                 }
             }
             else if (this.DataType == "DATE")
             {
-                return "Time"; 
+                return "DateTime"; 
             }
             else
             {
-                return "Object";
+                return "object";
             }
         }
     }

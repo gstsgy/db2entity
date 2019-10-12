@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DB2Java
+namespace DB2Entity
 {
     static class Program
     {
@@ -14,7 +14,7 @@ namespace DB2Java
         [STAThread]
         static void Main()
         {
-            Strawberry.LoadResourceDll.RegistDLL();
+            DB2Entity.LoadResourceDll.RegistDLL();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

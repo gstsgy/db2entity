@@ -1,4 +1,4 @@
-﻿namespace DB2Java
+﻿namespace DB2Entity
 {
     partial class Form1
     {

@@ -16,12 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DB2Entity.Entity.JavaEntity
+namespace DB2Entity.Entity.ProgramEntity
 {
 	/// <summary>
     /// java实体对象模型
     /// </summary>
-	public class JavaClass
+	public class JavaEntity
 	{
         /// <summary>
         /// 类修饰符
@@ -41,12 +41,12 @@ namespace DB2Entity.Entity.JavaEntity
         /// <summary>
         /// 类字段
         /// </summary>
-		public List<JavaField> Fields { get; set; } = new List<JavaField>();
+		public List<FieldEntity> Fields { get; set; } = new List<FieldEntity>();
 
         /// <summary>
         /// 类方法
         /// </summary>
-		public List<JavaMethod> Methods { get; set; } = new List<JavaMethod>();
+		public List<MethodEntity> Methods { get; set; } = new List<MethodEntity>();
 
 
         /// <summary>

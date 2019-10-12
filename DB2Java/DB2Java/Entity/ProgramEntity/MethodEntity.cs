@@ -16,12 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DB2Entity.Entity.JavaEntity
+namespace DB2Entity.Entity.ProgramEntity
 {
 	/// <summary>
 	/// Java方法对应实体对象
 	/// </summary>
-	public class JavaMethod
+	public class MethodEntity
 	{
         /// <summary>
         /// 访问修饰符

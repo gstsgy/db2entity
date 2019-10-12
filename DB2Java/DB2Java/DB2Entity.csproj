@@ -55,6 +55,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,12 +68,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\DBEntity\Mysql2CSharpEntity.cs" />
     <Compile Include="Entity\DBEntity\MysqlConnection.cs" />
+    <Compile Include="Entity\DBEntity\Oracle2CSharpEntity .cs" />
     <Compile Include="Entity\DBEntity\OracleConnection.cs" />
     <Compile Include="Entity\DBEntity\DbConnection.cs" />
-    <Compile Include="Entity\JavaEntity\JavaClass.cs" />
-    <Compile Include="Entity\JavaEntity\JavaField.cs" />
-    <Compile Include="Entity\JavaEntity\JavaMethod.cs" />
+    <Compile Include="Entity\ProgramEntity\JavaEntity.cs" />
+    <Compile Include="Entity\ProgramEntity\FieldEntity.cs" />
+    <Compile Include="Entity\ProgramEntity\MethodEntity.cs" />
     <Compile Include="LoadResourceDll.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -83,16 +86,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\ConfUtil.cs" />
-    <Compile Include="Util\CSharpClass.cs" />
-    <Compile Include="Entity\DBEntity\DbFieldEntity.cs" />
-    <Compile Include="Entity\DBEntity\DbFieldEntityMysql.cs" />
-    <Compile Include="Util\DBmySQL.cs" />
-    <Compile Include="Entity\DBEntity\DbFieldEntityOracle.cs" />
-    <Compile Include="Util\DbOracle.cs" />
+    <Compile Include="Entity\ProgramEntity\CSharpEntity.cs" />
+    <Compile Include="Entity\DBEntity\DbDataTypeEntity.cs" />
+    <Compile Include="Entity\DBEntity\Mysql2JavaEntity.cs" />
+    <Compile Include="Entity\DBEntity\Oracle2JavaEntity.cs" />
     <Compile Include="Entity\DBEntity\DbParamEntity.cs" />
     <Compile Include="Util\FileUtil.cs" />
     <Compile Include="Util\StrUtil.cs" />
-    <Compile Include="Util\SuperDb.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="dll\Newtonsoft.Json.dll" />
+    <None Include="Template.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="西柚.ico" />
     <EmbeddedResource Include="dll\Google.Protobuf.dll" />
     <EmbeddedResource Include="dll\MySql.Data.dll" />

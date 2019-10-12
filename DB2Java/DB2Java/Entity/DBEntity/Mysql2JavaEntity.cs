@@ -19,7 +19,7 @@ namespace DB2Entity.Entity.DBEntity
     /// <summary>
     /// mysql 与 java 数据类型转换
     /// </summary>
-    class DbFieldEntityMysql : DbFieldEntity
+    class Mysql2JavaEntity : DbDataTypeEntity
     {
         public override string TypeConversion()
         {

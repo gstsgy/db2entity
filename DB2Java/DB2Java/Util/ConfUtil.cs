@@ -1,41 +1,61 @@
 ﻿/*
- * Created by SharpDevelop.
- * User: leibf
- * Date: 2018/6/19
- * Time: 16:03
+ * 由SharpDevelop创建。
+ * 用户： guyue
+ * 日期: 2018/8/7
+ * 时间: 11:14
+ *  * 
+ * 修改者：guyue
+ * 修改日期：2019-10-12
+ * 修改内容：代码重构（格式方面）
  * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ * 
+ * 要改变这种模板请点击 工具|选项|代码编写|编辑标准头文件
  */
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace DB2Java.Util
+namespace DB2Entity.Util
 {
-	/// <summary>
-	/// Description of ConfUtil.
-	/// </summary>
-	public sealed class ConfUtil
-	{
-		 private static string INIFileName =
-            Path.Combine(Directory.GetCurrentDirectory(), "config.ini");
-		 private const string SECTION = "ATTENDANCE";
+    /// <summary>
+    /// 配置文件读写工具类
+    /// </summary>
+    public sealed class ConfUtil
+    {
+        /// <summary>
+        /// 配置文件路径
+        /// </summary>
+        private static string FilePath =
+           Path.Combine(Directory.GetCurrentDirectory(), "config.ini");
+
+        /// <summary>
+        /// 配置文件session
+        /// </summary>
+        private const string Session = "DB2Entity";
 		 
+        /// <summary>
+        /// 私有构造方法 
+        /// </summary>
 		private ConfUtil()
 		{
 		}
 		
-		public static string GetProfileString(string key)
+        /// <summary>
+        /// 读取配置文件
+        /// </summary>
+        /// <param name="key">key值</param>
+        /// <returns>value值</returns>
+		public static string GetProfile(string key)
         {
-            if (!File.Exists(INIFileName))
+            if (!File.Exists(FilePath))
             {
                 return "";
             }
             else
             {
-                StringBuilder temp = new StringBuilder(3000);
-                GetPrivateProfileString(SECTION, key, "", temp, 3000, INIFileName);
+                StringBuilder temp = new StringBuilder();
+                GetPrivateProfileString(Session, key, "", temp, int.MaxValue, FilePath);
 
                 return temp.ToString();
             }
@@ -44,16 +64,16 @@ namespace DB2Java.Util
 		/// <summary>
 		/// 属性写入ini文件
 		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
-        public static void WritePrivateProfileString(string key, string value)
+		/// <param name="key">key值</param>
+		/// <param name="value">value值</param>
+        public static void WriteProfile(string key, string value)
         {
-            if (!File.Exists(INIFileName))
+            if (!File.Exists(FilePath))
             {
-                throw new Exception();
+                Directory.CreateDirectory(FilePath); 
             }
 
-            WritePrivateProfileString(SECTION, key, value, INIFileName);
+            WritePrivateProfileString(Session, key, value, FilePath);
 
             return;
         }

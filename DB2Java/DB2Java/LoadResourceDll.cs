@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Strawberry
+namespace DB2Entity
 {
     static class LoadResourceDll
     {

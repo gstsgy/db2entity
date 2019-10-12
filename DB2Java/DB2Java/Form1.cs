@@ -1,6 +1,7 @@
-﻿using DB2Java.Util;
+﻿using DB2Entity.Entity.DBEntity;
+using DB2Entity.Entity.ProgramEntity;
+using DB2Java.Util;
 using Newtonsoft.Json;
-using Strawberry.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,15 +13,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DB2Java
+namespace DB2Entity
 {
     public partial class Form1 : Form
     {
-        private SuperDb db = null;
-        private DbFieldEntity d = null;
-        private string sql1;
-        private string sql2;
-        private List<List<string>> l = new List<List<string>>();
+        /// <summary>
+        /// 数据库连接
+        /// </summary>
+        private DbConnection connection = null;
+
+        /// <summary>
+        /// 数据库字段转换成程序字段
+        /// </summary>
+        private DbDataTypeEntity dbDataTypeEntity = null;
+
+        /// <summary>
+        /// 查找用户所有数据表信息sql
+        /// </summary>
+        private string getTablesSql;
+
+        /// <summary>
+        /// 查询表字段详细数据信息sql
+        /// </summary>
+        private string getTableInfosSql;
+
+        /// <summary>
+        /// 数据结果集
+        /// </summary>
+        private IList<Dictionary<string, object>> resList = new List<Dictionary<string, object>>();
+
+        /// <summary>
+        /// 数据库连接字符串参数
+        /// </summary>
         Dictionary<string, DbParamEntity> dbParams = new Dictionary<string, DbParamEntity>();
         public Form1()
         {
@@ -45,13 +69,13 @@ namespace DB2Java
             {
                 if (checkedListBox1.GetItemChecked(i))
                 {
-                    string tsql = sql2 + checkedListBox1.GetItemText(checkedListBox1.Items[i]) + "'";
+                    string tsql = getTableInfosSql + checkedListBox1.GetItemText(checkedListBox1.Items[i]) + "'";
                     //MessageBox.Show(sql);
-                    CSharpClass j = CreatCSharp(db.ExecuteReader(tsql));
-                    j.ty = "class";
-                    j.st.Add("public");
-                    j.name = InitUpper(checkedListBox1.GetItemText(checkedListBox1.Items[i]));
-                    string filename = Path.Combine(Directory.GetCurrentDirectory() + "\\classes", j.name);
+                    CSharpEntity j = CreatCSharp(connection.ExecuteReader(tsql));
+                    
+                    j.AccessModifier.Add("public");
+                    j.Name = InitUpper(checkedListBox1.GetItemText(checkedListBox1.Items[i]));
+                    string filename = Path.Combine(Directory.GetCurrentDirectory() + "\\classes", j.Name);
                     filename += ".cs";
                     string str = j.ToString();
                     //str = str.Replace("#", "\r\n\t");
@@ -71,48 +95,47 @@ namespace DB2Java
                 MessageBox.Show("保存成功");
             }
         }
-        private JavaClass CreatJava(List<List<string>> l)
+        private JavaEntity CreatJava(IList<Dictionary<string, object>> l)
         {
             if (l == null || l.Count == 0)
             {
                 return null;
             }
-            JavaClass j = new JavaClass();
-            foreach(List<string> tmp in l)
+            JavaEntity j = new JavaEntity();
+            foreach(Dictionary<string, object> tmp in l)
             {               
-                d.Name = tmp[0];
-                d.DataType = tmp[1];
-                d.DataLength = (tmp[2]==null|| tmp[2] == "")?0:int.Parse(tmp[2]);
-                d.DataScale= (tmp[3] == null || tmp[3] == "") ? 0 : int.Parse(tmp[3]);
-                JavaField jf = new JavaField();
-                jf.javaType = d.TypeConversion();
-                jf.power = "private";
-                jf.name = d.Name.ToLower();
-                jf.met = true;
-                j.ljf.Add(jf);              
+                dbDataTypeEntity.Name = tmp["NAME"].ToString();
+                dbDataTypeEntity.DataType = tmp["TYPE"].ToString();
+                dbDataTypeEntity.DataLength = (tmp["LENGTH"]== null|| tmp["LENGTH"].ToString() == "")?0:int.Parse(tmp["LENGTH"].ToString());
+                dbDataTypeEntity.DataScale= (tmp["SCALE"] == null || tmp["SCALE"].ToString()== "") ? 0 : int.Parse(tmp["SCALE"].ToString());
+                FieldEntity jf = new FieldEntity();
+                jf.DataType = dbDataTypeEntity.TypeConversion();
+                jf.AccessModifier = "private";
+                jf.Name = dbDataTypeEntity.Name.ToLower();
+                jf.Annotation = tmp["COMMENTS"].ToString();
+                j.Fields.Add(jf);              
             }
             return j;
         }
-        private CSharpClass CreatCSharp(List<List<string>> l)
+        private CSharpEntity CreatCSharp(IList<Dictionary<string, object>> l)
         {
             if (l == null || l.Count == 0)
             {
                 return null;
             }
-            CSharpClass j = new CSharpClass();
-            foreach (List<string> tmp in l)
+            CSharpEntity j = new CSharpEntity();
+            foreach (Dictionary<string, object> tmp in l)
             {
-                d.Name = tmp[0];
-                d.DataType = tmp[1];
-                d.DataLength = (tmp[2] == null || tmp[2] == "") ? 0 : int.Parse(tmp[2]);
-                d.DataScale = (tmp[3] == null || tmp[3] == "") ? 0 : int.Parse(tmp[3]);
-                d.Annotation = tmp[4];
-                JavaField jf = new JavaField();
-                jf.javaType = d.TypeConversion();
-                jf.power = "private";
-                jf.name = InitUpper(d.Name.ToLower());
-                jf.met = true;
-                j.ljf.Add(jf);
+                dbDataTypeEntity.Name = tmp["NAME"].ToString();
+                dbDataTypeEntity.DataType = tmp["TYPE"].ToString();
+                dbDataTypeEntity.DataLength = (tmp["LENGTH"] == null || tmp["LENGTH"].ToString() == "") ? 0 : int.Parse(tmp["LENGTH"].ToString());
+                dbDataTypeEntity.DataScale = (tmp["SCALE"] == null || tmp["SCALE"].ToString() == "") ? 0 : int.Parse(tmp["SCALE"].ToString());
+                FieldEntity jf = new FieldEntity();
+                jf.DataType = dbDataTypeEntity.TypeConversion();
+                jf.AccessModifier = "private";
+                jf.Name = dbDataTypeEntity.Name.ToLower();
+                jf.Annotation = tmp["COMMENTS"].ToString();
+                j.Fields.Add(jf);
             }
             return j;
         }
@@ -144,13 +167,13 @@ namespace DB2Java
             {
                 if (checkedListBox1.GetItemChecked(i))
                 {
-                    string tsql = sql2 + checkedListBox1.GetItemText(checkedListBox1.Items[i]) + "'";
-                    //MessageBox.Show(sql);
-                    CSharpClass j = CreatCSharp(db.ExecuteReader(tsql));
-                    j.ty = "class";
-                    j.st.Add("public");
-                    j.name = InitUpper(checkedListBox1.GetItemText(checkedListBox1.Items[i]));
-                    string filename = Path.Combine(Directory.GetCurrentDirectory() + "\\classes", j.name);
+                    string tsql = getTableInfosSql + checkedListBox1.GetItemText(checkedListBox1.Items[i]) + "'";
+                   // MessageBox.Show(tsql);
+                    CSharpEntity j = CreatCSharp(connection.ExecuteReader(tsql));
+                    
+                    j.AccessModifier.Add("public");
+                    j.Name = InitUpper(checkedListBox1.GetItemText(checkedListBox1.Items[i]));
+                    string filename = Path.Combine(Directory.GetCurrentDirectory() + "\\classes", j.Name);
                     filename += ".cs";
                     string str = j.ToString();
                     //str = str.Replace("#", "\r\n\t");
@@ -186,27 +209,27 @@ namespace DB2Java
             {
                 dbParams.Add("Oracle", new DbParamEntity());
             }
-            dbParams["Oracle"].ip = textBox1.Text.Trim();
-            dbParams["Oracle"].port = textBox2.Text.Trim();
-            dbParams["Oracle"].username = textBox3.Text.Trim();
-            dbParams["Oracle"].password = textBox4.Text.Trim();
-            dbParams["Oracle"].database = textBox5.Text.Trim();
+            dbParams["Oracle"].Ip = textBox1.Text.Trim();
+            dbParams["Oracle"].Port = textBox2.Text.Trim();
+            dbParams["Oracle"].Username = textBox3.Text.Trim();
+            dbParams["Oracle"].Password = textBox4.Text.Trim();
+            dbParams["Oracle"].Database = textBox5.Text.Trim();
            // string jsonData = JsonConvert.SerializeObject(oneList);
             string path = Directory.GetCurrentDirectory() + "/db.conf";
             FileUtil.WriteFile(path,JsonConvert.SerializeObject(dbParams),null,FileMode.Create);
 
-            sql1 = "select table_name from user_tables";
-            db = new DbOracle();
-            db.InitDbInfo(dbParams["Oracle"]); 
+            getTablesSql = "select table_name name from user_tables";
+            connection = new OracleConnection(dbParams["Oracle"]);
+           
             try
             {
-                l = db.ExecuteReader(sql1);
+                resList = connection.ExecuteReader(getTablesSql);
             }
             catch (Exception e1)
             {
                 MessageBox.Show("参数有误------>" + e1.Message);
             }
-            GetTable(l);
+            GetTable(resList);
         }
         private void button5_Click(object sender, EventArgs e)
         {
@@ -226,26 +249,26 @@ namespace DB2Java
             {
                 dbParams.Add("MySql", new DbParamEntity());
             }
-            dbParams["MySql"].ip = textBox10.Text.Trim();
-            dbParams["MySql"].port = textBox9.Text.Trim();
-            dbParams["MySql"].username = textBox8.Text.Trim();
-            dbParams["MySql"].password = textBox7.Text.Trim();
-            dbParams["MySql"].database = textBox6.Text.Trim();
+            dbParams["MySql"].Ip = textBox10.Text.Trim();
+            dbParams["MySql"].Port = textBox9.Text.Trim();
+            dbParams["MySql"].Username = textBox8.Text.Trim();
+            dbParams["MySql"].Password = textBox7.Text.Trim();
+            dbParams["MySql"].Database = textBox6.Text.Trim();
             string path = Directory.GetCurrentDirectory() + "/db.conf";
             FileUtil.WriteFile(path, JsonConvert.SerializeObject(dbParams), null, FileMode.Create);
-              sql1 = "select table_name from information_schema.tables where table_schema = '" + dbParams["MySql"].database + "'"; ;
-               db = new MysqlConnection ();
+              getTablesSql = "select table_name NAME from information_schema.tables where table_schema = '" + dbParams["MySql"].Database + "'"; ;
+               connection = new MysqlConnection (dbParams["Oracle"]);
            
-            db.InitDbInfo(dbParams["Oracle"]);
+          
             try
             {
-                l = db.ExecuteReader(sql1);
+                resList = connection.ExecuteReader(getTablesSql);
             }
             catch (Exception e1)
             {
                 MessageBox.Show("参数有误------>" + e1.Message);
             }
-            GetTable(l);
+            GetTable(resList);
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -281,14 +304,14 @@ namespace DB2Java
             }
         }
         
-        void GetTable(List<List<string>> l)
+        void GetTable(IList<Dictionary<string, object>> list)
         {
             this.checkedListBox1.Items.Clear();
-            if (l != null)
+            if (list != null)
             {
-                foreach (var tmp in l)
+                foreach (var tmp in list)
                 {
-                    this.checkedListBox1.Items.Add(tmp[0]);
+                    this.checkedListBox1.Items.Add(tmp["NAME"]);
                 }
             }
         }
@@ -297,30 +320,30 @@ namespace DB2Java
         {
             if (tabControl1.SelectedIndex == 0)
             {
-                sql1 = "select table_name from user_tables";
+                getTablesSql = "select table_name from user_tables";
                 
                 
-                db = new DbOracle();
-                if (dbParams.ContainsKey("Oracle"))
-                {
-                    db.InitDbInfo(dbParams["Oracle"]);
-                }
+                connection = new OracleConnection(dbParams["Oracle"]);
+                //if (dbParams.ContainsKey("Oracle"))
+                //{
+                //    connection.InitDbInfo(dbParams["Oracle"]);
+                //}
                 
-                d = new DbFieldEntityOracle();
-                sql2 = "select A.COLUMN_NAME,A.DATA_TYPE,A.DATA_LENGTH,A.DATA_SCALE,b.comments from user_tab_columns A,user_col_comments b" +
+                dbDataTypeEntity = new Oracle2CSharpEntity();
+                getTableInfosSql = "select A.COLUMN_NAME name,A.DATA_TYPE type,A.DATA_LENGTH length,A.DATA_SCALE scale,b.comments comments from user_tab_columns A,user_col_comments b" +
                     "  where a.COLUMN_NAME=b.COLUMN_NAME and a.TABLE_NAME = b.TABLE_NAME  and  a.TABLE_NAME = '";
             }
             else if(tabControl1.SelectedIndex == 1)
             {
 
-                db = new MysqlConnection ();
-                if (dbParams.ContainsKey("MySql"))
-                {
-                    db.InitDbInfo(dbParams["MySql"]);
-                }
+                connection = new MysqlConnection(dbParams["MySql"]);
+                //if (dbParams.ContainsKey("MySql"))
+                //{
+                //    connection.InitDbInfo();
+                //}
                 
-                d = new DbFieldEntityMysql();
-                sql2 = "select tmp.COLUMN_NAME,tmp.DATA_TYPE,'0',tmp.NUMERIC_SCALE from information_schema.columns tmp where table_name='";
+                dbDataTypeEntity = new Mysql2CSharpEntity();
+                getTableInfosSql = "select tmp.COLUMN_NAME NAME,tmp.DATA_TYPE TYPE,'0' LENGTH,tmp.NUMERIC_SCALE SCALE,tmp.COLUMN_COMMENT COMMENTS from information_schema.columns tmp where table_name='";
             }
            
         }
@@ -335,29 +358,42 @@ namespace DB2Java
             }
             if (dbParams.ContainsKey("MySql"))
             {
-                this.textBox10.Text = dbParams["MySql"].ip;
-                this.textBox9.Text = dbParams["MySql"].port;
-                this.textBox6.Text = dbParams["MySql"].database;
-                this.textBox8.Text = dbParams["MySql"].username;
-                this.textBox7.Text = dbParams["MySql"].password;
+                this.textBox10.Text = dbParams["MySql"].Ip;
+                this.textBox9.Text = dbParams["MySql"].Port;
+                this.textBox6.Text = dbParams["MySql"].Database;
+                this.textBox8.Text = dbParams["MySql"].Username;
+                this.textBox7.Text = dbParams["MySql"].Password;
             }
             if (dbParams.ContainsKey("Oracle"))
             {
-                this.textBox1.Text = dbParams["Oracle"].ip;
-                this.textBox2.Text = dbParams["Oracle"].port;
-                this.textBox3.Text = dbParams["Oracle"].database;
-                this.textBox4.Text = dbParams["Oracle"].username;
-                this.textBox5.Text = dbParams["Oracle"].password;
+                this.textBox1.Text = dbParams["Oracle"].Ip;
+                this.textBox2.Text = dbParams["Oracle"].Port;
+                this.textBox3.Text = dbParams["Oracle"].Database;
+                this.textBox4.Text = dbParams["Oracle"].Username;
+                this.textBox5.Text = dbParams["Oracle"].Password;
             }
+
+            getTablesSql = "select table_name from user_tables";
+
+
+            connection = new OracleConnection(dbParams["Oracle"]);
+            //if (dbParams.ContainsKey("Oracle"))
+            //{
+            //    connection.InitDbInfo(dbParams["Oracle"]);
+            //}
+
+            dbDataTypeEntity = new Oracle2CSharpEntity();
+            getTableInfosSql = "select A.COLUMN_NAME name,A.DATA_TYPE type,A.DATA_LENGTH length,A.DATA_SCALE scale,b.comments comments from user_tab_columns A,user_col_comments b" +
+                "  where a.COLUMN_NAME=b.COLUMN_NAME and a.TABLE_NAME = b.TABLE_NAME  and  a.TABLE_NAME = '";
         }
 
         private void textBox11_TextChanged(object sender, EventArgs e)
         {
-            List<List<string>> tmp = new List<List<string>>();
-            string str = textBox11.Text.Trim();
-            foreach(List<string> list in l)
+            IList<Dictionary<string, object>>  tmp = new List<Dictionary<string, object>>();
+            string str = textBox11.Text.Trim().ToUpper();
+            foreach(Dictionary<string, object> list in resList)
             {
-                if (list[0].IndexOf(str) != -1)
+                if (list["NAME"].ToString().IndexOf(str) != -1)
                 {
                     tmp.Add(list);
                 }

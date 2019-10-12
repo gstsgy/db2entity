@@ -1,10 +1,15 @@
 ﻿/*
- * Created by SharpDevelop.
- * User: leibf
- * Date: 2018/7/2
- * Time: 13:44
+ * 由SharpDevelop创建。
+ * 用户： guyue
+ * 日期: 2018/8/7
+ * 时间: 11:14
+ *  * 
+ * 修改者：guyue
+ * 修改日期：2019-10-12
+ * 修改内容：代码重构（格式方面）
  * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ * 
+ * 要改变这种模板请点击 工具|选项|代码编写|编辑标准头文件
  */
 using System;
 using System.Collections.Generic;
@@ -138,6 +143,11 @@ namespace DB2Java.Util
                 Directory.CreateDirectory(subPath);
             }
         }
+
+        /// <summary>
+        /// 读取模板文件
+        /// </summary>
+        /// <returns></returns>
         public static string ReadTemplate()
         {
             string path = Directory.GetCurrentDirectory() + "/Template.conf";
@@ -148,7 +158,7 @@ namespace DB2Java.Util
             {
                 content += str + "\r\n";
             }
-            return string.Format(content, DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
+            return content.Replace("#",DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss").ToString());
         }
     }
 }

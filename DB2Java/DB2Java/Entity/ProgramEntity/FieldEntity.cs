@@ -17,12 +17,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DB2Entity.Entity.JavaEntity
+namespace DB2Entity.Entity.ProgramEntity
 {
     /// <summary>
     /// Java字段实体对象模型
     /// </summary>
-    public class JavaField
+    public class FieldEntity
     {
         /// <summary>
         /// 访问修饰符
