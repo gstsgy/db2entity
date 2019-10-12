@@ -11,8 +11,10 @@
  * 
  * 要改变这种模板请点击 工具|选项|代码编写|编辑标准头文件
  */
+using DB2Entity.Util;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DB2Entity.Entity.JavaEntity
 {
@@ -27,50 +29,56 @@ namespace DB2Entity.Entity.JavaEntity
 		public List<string> AccessModifier { get; set; } = new List<string>();
 
         /// <summary>
-        /// 
+        /// class关键字
         /// </summary>
 		public string ClassKeyword { get; set; } = "class";
 
         /// <summary>
-        /// 
+        /// 类名称
         /// </summary>
-		public string name;
+		public string Name { get; set; }
 
         /// <summary>
-        /// 
+        /// 类字段
         /// </summary>
-		public List<JavaField> ljf = new List<JavaField>();
+		public List<JavaField> Fields { get; set; } = new List<JavaField>();
 
         /// <summary>
-        /// 
+        /// 类方法
         /// </summary>
-		public List<JavaMethod> ljm = new List<JavaMethod>();
-		
-		public override string ToString()
+		public List<JavaMethod> Methods { get; set; } = new List<JavaMethod>();
+
+
+        /// <summary>
+        /// 重写ToString
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
 		{
-			string diff = " ";
-			string tab = "    ";
-			string ent = "\r\n";
-			string str = "";
-			foreach (string tmp in this.AccessModifier) {
-				str += tmp + diff;
-			}           
-			str += ClassKeyword + diff + name + "{";
-			foreach (var tmp in ljf) {
-				str += tmp.ToString();
+			
+            StringBuilder str = new StringBuilder();
+
+            foreach (string tmp in this.AccessModifier) {
+                str .Append(tmp + StrUtil.Separator) ;
 			}
-			foreach (var tmp in ljf) {
-				if (tmp.met) {
-					str += tmp.ToGetMethod();
-					str += tmp.ToSetMethod();
+            str.Append(this.ClassKeyword + StrUtil.Separator +this. Name + "{");
+           
+			foreach (var tmp in this.Fields) {
+                str.Append(tmp .ToString());
+			}
+			foreach (var tmp in this.Fields) {
+				if (tmp.Met) {
+                    str.Append(tmp.ToGetMethod());
+                    str.Append(tmp.ToSetMethod());
 				}
                 
 			}
-			foreach (var tmp in ljm) {
-				str += tmp.ToString();
+			foreach (var tmp in this.Methods ) {
+                str.Append(tmp.ToString());
 			}
-			str += ent + "}";
-			return str;
+            str.Append(StrUtil.NewlineCharacter + "}");
+
+			return str.ToString();
 		}
 	}
 }

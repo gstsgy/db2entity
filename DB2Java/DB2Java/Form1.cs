@@ -234,7 +234,7 @@ namespace DB2Java
             string path = Directory.GetCurrentDirectory() + "/db.conf";
             FileUtil.WriteFile(path, JsonConvert.SerializeObject(dbParams), null, FileMode.Create);
               sql1 = "select table_name from information_schema.tables where table_schema = '" + dbParams["MySql"].database + "'"; ;
-               db = new DBmySQL();
+               db = new MysqlConnection ();
            
             db.InitDbInfo(dbParams["Oracle"]);
             try
@@ -313,7 +313,7 @@ namespace DB2Java
             else if(tabControl1.SelectedIndex == 1)
             {
 
-                db = new DBmySQL();
+                db = new MysqlConnection ();
                 if (dbParams.ContainsKey("MySql"))
                 {
                     db.InitDbInfo(dbParams["MySql"]);

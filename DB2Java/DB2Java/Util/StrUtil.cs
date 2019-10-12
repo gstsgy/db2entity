@@ -37,13 +37,13 @@ namespace DB2Entity.Util
             {
                 return "";
             }
-            else if (str.Length == 1)
-            {
-                return str.ToUpper();
-            }
+            //else if (str.Length == 1)
+            //{
+            //    return str.ToUpper();
+            //}
             else
             {
-                return str[0].ToString().ToUpper() + str.Substring(1, str.Length - 1).ToLower();
+                return str[0].ToString().ToUpper() + str.Substring(1, str.Length - 1);
             }
         }
     }

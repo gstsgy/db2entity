@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\DBEntity\MysqlConnection.cs" />
+    <Compile Include="Entity\DBEntity\OracleConnection.cs" />
+    <Compile Include="Entity\DBEntity\DbConnection.cs" />
     <Compile Include="Entity\JavaEntity\JavaClass.cs" />
     <Compile Include="Entity\JavaEntity\JavaField.cs" />
     <Compile Include="Entity\JavaEntity\JavaMethod.cs" />

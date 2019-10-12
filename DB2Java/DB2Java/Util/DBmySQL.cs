@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace DB2Java.Util
 {
-    public class DBmySQL: SuperDb
+    public class MysqlConnection : SuperDb
     {
         public  string ORACLE_SERVER_IP;
         public  string ORACLE_SERVER_PORT;
         public  string ORACLE_SERVER_SERVICENAME;
         public  string ORACLE_USERID;
         public  string ORACLE_PASSWORD;
-        public DBmySQL()
+        public MysqlConnection ()
         {
         }
         public override void InitDbInfo(DbParamEntity dBparm)

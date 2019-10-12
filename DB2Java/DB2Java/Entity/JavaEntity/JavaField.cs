@@ -52,7 +52,7 @@ namespace DB2Entity.Entity.JavaEntity
         /// <summary>
         /// 是否生成get，set方法
         /// </summary>
-        public bool Met { get; set; }
+        public bool Met { get; set; } = true;
 
         /// <summary>
         /// 覆盖ToString方法
