@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 namespace DB2Entity.Entity.DBEntity
 {
     /// <summary>
-    /// Oracle 与 Java 数据类型转换
+    /// Oracle 与 CSharp 数据类型转换
     /// </summary>
     class Oracle2CSharpEntity : DbDataTypeEntity
     {
